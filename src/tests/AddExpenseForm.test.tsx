@@ -12,5 +12,24 @@ describe("Add Expense Form Component", () => {
         expect(costTitle).toBeInTheDocument();
         expect(saveButton).toBeInTheDocument();
     })
-    it("Submitting empty form ")
+    it("Submitting empty form", () => {
+        render(<AddExpenseForm />)
+        const saveButton = screen.getByRole(`button`, { name: /save/i });
+        const nameInput = screen.getByTestId(`name-input`);
+        const costInput = screen.getByTestId(`cost-input`);
+        fireEvent.change(nameInput, { target: { value: `Gas` } });
+        fireEvent.change(costInput, { target: { value: `10` } });
+        fireEvent.click(saveButton);
+        expect(nameInput).toBeValid();
+        /*
+        const nameInput = screen.getByTestId(`name-input`);
+        const costInput = screen.getByTestId(`cost-input`);
+        expect(nameInput).toBeInvalid();
+        expect(costInput).toBeInvalid();
+        fireEvent.change(nameInput, { target: { value: `Gas` } });
+        fireEvent.change(costInput, { target: { value: `10` } });
+        fireEvent.submit(saveButton);
+        expect(nameInput).toBeValid();
+        */
+    })
 })
