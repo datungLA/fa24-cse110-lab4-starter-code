@@ -11,6 +11,9 @@ describe("Budget Component", () => {
         );
         const budgetInitialValue = screen.getByText(`Budget: $1000`);
         expect(budgetInitialValue).toBeInTheDocument();
+        fireEvent.click(budgetInitialValue);
+        const budgetInput = screen.getByDisplayValue(`1000`) as HTMLInputElement;
+        expect(budgetInput).toBeInTheDocument();
     })
     it("edit budget value", () => {
         render(
