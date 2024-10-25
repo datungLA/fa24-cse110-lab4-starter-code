@@ -38,7 +38,7 @@ const ExpenseItem = (currentExpense: Expense) => {
         )
         }
       </div>
-      <button onClick={() => handleDeleteExpense(currentExpense)}>x</button>
+      <button data-testid="delete" onClick={() => handleDeleteExpense(currentExpense)}>x</button>
     </li >
   );
 };
