@@ -13,7 +13,7 @@ const ExpenseItem = (currentExpense: Expense) => {
     setExpenses(updatedExpense);
   };
   const handleEditExpense = () => {
-    const updatedExpense = expenses.map((expense) => expense.id === currentExpense.id ? { ...expense, name: editExpense.name, cost: editExpense.cost } : expense);
+    const updatedExpense = expenses.map((expense) => expense.id === currentExpense.id ? { ...expense, description: editExpense.description, cost: editExpense.cost } : expense);
     setExpenses(updatedExpense);
     setEditField(null);
   };
@@ -24,9 +24,9 @@ const ExpenseItem = (currentExpense: Expense) => {
     <li className="list-group-item d-flex justify-content-between align-items-center">
       <div>
         {editField === "name" ? (
-          <input type="text" value={editExpense.name} onChange={(e) => setEditExpense({ ...editExpense, name: e.target.value })} onBlur={handleBlur} autoFocus />
+          <input type="text" value={editExpense.description} onChange={(e) => setEditExpense({ ...editExpense, description: e.target.value })} onBlur={handleBlur} autoFocus />
         ) : (
-          <div onClick={() => setEditField("name")}>{currentExpense.name}</div>
+          <div onClick={() => setEditField("name")}>{currentExpense.description}</div>
         )
         }
       </div>
