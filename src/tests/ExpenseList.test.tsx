@@ -19,7 +19,7 @@ describe("ExpenseItem Component", () => {
     fireEvent.click(saveButton);
 
     // expense list verification
-    const newExpenseName = screen.getByText('Ga');
+    const newExpenseName = screen.getByText('GS');
     const newexpenseCost = screen.getByText('$10');
     expect(newExpenseName).toBeInTheDocument();
     expect(newexpenseCost).toBeInTheDocument();
