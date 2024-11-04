@@ -1,16 +1,21 @@
 import { useContext, useState } from "react";
 import { Expense } from "../../types/types";
 import { AppContext } from "../../context/AppContext";
-
+import { deleteExpense } from "../../utils/expense-utils";
 const ExpenseItem = (currentExpense: Expense) => {
   // Exercise: Consume the AppContext here
   const { expenses, setExpenses } = useContext(AppContext)
   const [editField, setEditField] = useState<string | null>(null);
   const [editExpense, setEditExpense] = useState<Expense>(currentExpense);
-  const handleDeleteExpense = (currentExpense: Expense) => {
+  const handleDeleteExpense = async (currentExpense: Expense) => {
     // Exercise: Remove expense from expenses context array
-    const updatedExpense = expenses.filter((expense) => expense.id !== currentExpense.id)
-    setExpenses(updatedExpense);
+    try {
+      await deleteExpense(currentExpense.id);
+      const updatedExpense = expenses.filter((expense) => expense.id !== currentExpense.id)
+      setExpenses(updatedExpense);
+    } catch (error) {
+      console.error("Error deleting expense", error);
+    }
   };
   const handleEditExpense = () => {
     const updatedExpense = expenses.map((expense) => expense.id === currentExpense.id ? { ...expense, description: editExpense.description, cost: editExpense.cost } : expense);
