@@ -8,4 +8,13 @@ export function getBudget(res: Response, budget: number) {
 // Function to update the budget
 export function updateBudget(res: Response, body: any, budget: { amount: number }) {
     // TO DO: Implement updateBudget function
+    console.log("updateBudget", body);
+    const newAmount = body.amount;
+
+    if (typeof newAmount !== 'number') {
+        return res.status(400).send({ error: "Invalid amount" });
+    }
+    
+    budget.amount = newAmount;
+    res.status(201).send({ "data": budget.amount });
 }
