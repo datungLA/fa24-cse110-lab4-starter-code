@@ -1,33 +1,46 @@
 import { Expense } from "../types";
 import { Request, Response } from "express";
+import { Database } from "sqlite";
+export async function createExpenseServer(req: Request, res: Response, db: Database) {
 
-export function createExpenseServer(req: Request, res: Response, expenses: Expense[]) {
-    const { id, cost, description } = req.body;
+    try {
+        // Type casting the request body to the expected format.
+        const { id, cost, description } = req.body as { id: string, cost: number, description: string };
 
-    if (!description || !id || !cost) {
-        return res.status(400).send({ error: "Missing required fields" });
-    }
+        if (!description || !id || !cost) {
+            return res.status(400).send({ error: "Missing required fields" });
+        }
 
-    const newExpense: Expense = {
-        id: id,
-        description,
-        cost,
+        await db.run('INSERT INTO expenses (id, description, cost) VALUES (?, ?, ?);', [id, description, cost]);
+        res.status(201).send({ id, description, cost });
+
+    } catch (error) {
+
+        return res.status(400).send({ error: `Expense could not be created, + ${error}` });
     };
 
-    expenses.push(newExpense);
-    res.status(201).send(newExpense);
 }
 
-export function deleteExpense(req: Request, res: Response, expenses: Expense[]) {
+
+export async function deleteExpense(req: Request, res: Response, db: Database) {
     const { id } = req.params;
-
-    const index = expenses.findIndex(expense => expense.id === id);
-
-    expenses.splice(index, 1);
-
-    res.status(200).send({ message: "Expense deleted" });
+    try {
+        const expense = db.all('SELECT * FROM expenses WHERE id =?', [id]);
+        if (!expense) {
+            return res.status(404).send({ error: `Expense with id ${id} not found` });
+        }
+        await db.run('DELETE FROM expenses WHERE id = ?', id);
+        res.status(200).send({ message: "Expense deleted" });
+    } catch (error) {
+        res.status(404).send({ error: `Expense with id ${id} not found` });
+    }
 }
 
-export function getExpenses(req: Request, res: Response, expenses: Expense[]) {
-    res.status(200).send({ "data": expenses });
+export async function getExpenses(req: Request, res: Response, db: Database) {
+    try {
+        const expenses: Expense[] = await db.all('SELECT * FROM expenses');
+        res.status(200).send({ "data": expenses });
+    } catch (error) {
+        res.status(500).send({ error: `Failed to get expenses, + ${error}` });
+    }
 }
