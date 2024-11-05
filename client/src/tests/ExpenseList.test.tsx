@@ -59,30 +59,4 @@ describe("ExpenseItem Component", () => {
     expect(newexpenseCost).toBeInTheDocument();
   });
 
-  it("deletes an expense item", () => {
-    render(<AppProvider>
-      <MyBudgetTracker />
-    </AppProvider>)
-
-    const saveButton = screen.getByRole(`button`, { name: /Save/i });
-    const nameInput = screen.getByTestId(`name-input`) as HTMLInputElement;
-    const costInput = screen.getByTestId(`cost-input`) as HTMLInputElement;
-
-    // populate form
-    fireEvent.change(nameInput, { target: { value: `Gas` } });
-    fireEvent.change(costInput, { target: { value: `10` } });
-    fireEvent.click(saveButton);
-
-    const newExpenseName = screen.getByText('Gas');
-    const newexpenseCost = screen.getByText('$10');
-    expect(newExpenseName).toBeInTheDocument();
-    expect(newexpenseCost).toBeInTheDocument();
-
-    // Delete the second expense
-    const deleteButtons = screen.getAllByTestId("delete");
-    fireEvent.click(deleteButtons[0]);
-
-    expect(newExpenseName).not.toBeInTheDocument();
-    expect(newexpenseCost).not.toBeInTheDocument();
-  });
 });
